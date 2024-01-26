@@ -16,17 +16,14 @@ app.use(cors(
 ));
 app.use(express.json());
 
-mongoose
-  .connect(process.env.MONGO_URL, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB Connetion Successfull");
-  })
-  .catch((err) => {
+
+const db=process.env.DATABASE;
+mongoose.connect(db,{  writeConcern: { w: 'majority' }}).then(()=>{
+    console.log('connected to database');
+}).catch((err)=>{
+    console.log('error connecting to database');
     console.log(err.message);
-  });
+})
 
 app.use("/api/auth", authRoutes);
 app.use("/api/messages", messageRoutes);
